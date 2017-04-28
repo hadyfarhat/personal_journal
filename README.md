@@ -1,4 +1,4 @@
-# Personal Learning Journal build with Flask
+# Personal Learning Journal built using Flask
 
 The following are included:
 
