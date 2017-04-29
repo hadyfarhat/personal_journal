@@ -19,6 +19,7 @@ class User(UserMixin, Model):
         order_by = ("-joined_at",)
 
 
+    @classmethod
     def create_user(cls, username, email, password, admin=False):
         cls.create(
             username=username,
@@ -33,5 +34,19 @@ class Entry(Model):
     time_spent = IntegerField(default=1)
     material_learned = TextField()
     resources_to_remember = TextField()
+    user = ForeignKeyField(
+        rel_model=User,
+        related_name="entries"
+    )
+
+    class Meta:
+        database = DATABASE
+        order_by = ("-timestamp",)
 
 
+
+
+def initialize():
+    DATABASE.connect()
+    DATABASE.create_tables([User, Entry], safe=True)
+    DATABASE.close()

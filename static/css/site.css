@@ -226,12 +226,13 @@ input[type=submit] {
 }
 
 
-
-
-
-
-
-
+.error {
+	max-width: 400px;
+	background: #990000;
+	padding: 4px 4px;
+	color: white;
+	border-radius: 10px;
+}
 
 
 
