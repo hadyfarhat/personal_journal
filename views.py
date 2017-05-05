@@ -38,8 +38,12 @@ def after_request(response):
 
 
 @app.route("/")
-@app.route("/entries")
 def index():
+    return "Hey"
+
+
+@app.route("/entries")
+def list():
     entries = models.Entry.select()
     return render_template("index.html", entries=entries)
 
@@ -96,7 +100,7 @@ def add():
         return redirect(url_for("index"))
     return render_template("new.html", form=form)
 
-@app.route("/details/<entry_id>")
+@app.route("/entries/<entry_id>")
 def details(entry_id):
     try:
         entry = models.Entry.get(models.Entry.id == entry_id)
@@ -121,7 +125,7 @@ def edit(entry_id):
     return render_template("edit.html", form=form, entry=entry)
 
 
-@app.route("/delete/<entry_id>")
+@app.route("/entries/delete/<entry_id>")
 @login_required
 def delete(entry_id):
     entry = models.Entry.get(models.Entry.id==entry_id)
