@@ -1,4 +1,5 @@
 {% from "macros.html" import render_field %}
+{% from "macros.html" import show_error %}
 {% extends "_base.html" %}
 
 {% block content %}
@@ -8,9 +9,31 @@
                 <h2>New Entry</h2>
                 <form method="POST" action="">
                     {{ form.hidden_tag() }}
-                    {% for field in form %}
+                   {#  {% for field in form %}
                         {{render_field(field)}}
-                    {% endfor %}
+                    {% endfor %} #}
+                    
+                    {{show_error(form.title)}}
+                    <label for="title"> Title</label>
+                    {# <input id="title" type="text" name="title"><br> #}
+                    {{form.title}}
+
+                    {{show_error(form.time_spent)}}
+                    <label for="time_spent"> Time Spent</label>
+                    {{form.time_spent}}
+
+                    {{show_error(form.material_learned)}}
+                    <label for="material_learned"> Material Learned</label>
+                    {{form.material_learned}}
+
+                    {{show_error(form.resources_to_remember)}}
+                    <label for="resources_to_remember"> Resources To Remember</label>
+                    {{form.resources_to_remember}}
+
+                    {{show_error(form.label)}}
+                    <label for="label"> Label:</label>
+                    {{form.label}}
+
                     <input type="submit" value="Publish Entry" class="button">
                     <a href="{{url_for('index')}}" class="button button-secondary">Cancel</a>
                 </form>

@@ -1,0 +1,27 @@
+{% extends "_base.html" %}
+
+{% block content %}
+   <section>
+      <div class="container">
+         <div class="entry-list">
+            {% if entries %}
+               {% for entry in entries %}
+                  <article>
+                     <h2><a href="{{url_for('details', entry_id=entry.id) }}">{{ entry.title }}</a></h2>
+                     <p>Created at: <i>{{ entry.timestamp.strftime("%Y:%m %H:%m") }}</i></p>
+                     <p>Created by: <i>{{ entry.user.username }}</i></p>
+                     <p>
+                        Label:
+                        <a href="{{url_for('labels', label_id=entry.label.id)}}">
+                           {{ entry.label.content }}
+                        </a>
+                     </p>
+                  </article>
+               {% endfor %}
+            {% else %}
+               <h2>No entries found</h2>
+            {% endif %}
+         </div>
+      </div>
+   </section>
+{% endblock %}

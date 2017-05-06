@@ -99,16 +99,17 @@ h1 {
 h2 {
 	font-size: 32px;
 }
-h2 a {
+h2 a, h4 a {
 	text-decoration: none;
 	color: #000;
 }
-h3 {
+h3, h4 {
 	font-size: 18px;
 	font-family: 'Work Sans', serif;
 	font-weight: 600;
 	text-transform: uppercase;
 }
+
 p {
 	line-height: 1.8em;
 	font-size: 18px;
@@ -234,8 +235,24 @@ input[type=submit] {
 	border-radius: 10px;
 }
 
+.profile {
+	background: #678f89;
+	padding: 5px 5px;
+	margin: 50px 50px;
+	max-width: 150px;
+}
 
+.profile a:link {
+	color: white;
+	text-decoration: none;
+}
 
+.profile a:hover {
+	color: white;
+}
 
+.profile a:visited {
+	color: white;
+}
 
 

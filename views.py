@@ -13,13 +13,13 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
+
 @login_manager.user_loader
 def load_user(user_id):
     try:
         return models.User.get(models.User.id == user_id)
     except models.DoesNotExist:
         return None
-
 
 
 @app.before_request
@@ -39,13 +39,13 @@ def after_request(response):
 
 @app.route("/")
 def index():
-    return "Hey"
+    return render_template("index.html")
 
 
 @app.route("/entries")
 def list():
     entries = models.Entry.select()
-    return render_template("index.html", entries=entries)
+    return render_template("list.html", entries=entries)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -57,7 +57,7 @@ def register():
             email=form.email.data,
             password=form.password.data
         )
-        return redirect(url_for("index"))
+        return redirect(url_for("login"))
     return render_template("register.html", form=form)
 
 
@@ -90,15 +90,27 @@ def logout():
 def add():
     form = forms.PostForm()
     if form.validate_on_submit():
+        label2 = None
+        labels = models.Label.select()
+        for label in labels:
+            if label.content.lower() == form.label.data.lower().strip():
+                label2 = label
+                break
+        if not label2:
+            label2 = models.Label.create(
+                content=form.label.data
+            )
         models.Entry.create(
             title=form.title.data,
             time_spent=form.time_spent.data,
             material_learned=form.material_learned.data,
             resources_to_remember=form.resources_to_remember.data,
-            user=g.user._get_current_object()
+            user=g.user._get_current_object(),
+            label=label2
         )
-        return redirect(url_for("index"))
+        return redirect(url_for("list"))
     return render_template("new.html", form=form)
+
 
 @app.route("/entries/<entry_id>")
 def details(entry_id):
@@ -112,14 +124,25 @@ def details(entry_id):
 @app.route("/entries/edit/<entry_id>", methods=["GET", "POST"])
 @login_required
 def edit(entry_id):
-    entry = models.Entry.get(models.Entry.id==entry_id)
+    entry = models.Entry.get(models.Entry.id == entry_id)
     if entry:
         form = forms.PostForm()
         if form.validate_on_submit():
-            entry.title=form.title.data
-            entry.time_spent=form.time_spent.data
-            entry.material_learned=form.material_learned.data
-            entry.resources_to_remember=form.resources_to_remember.data
+            label2 = None
+            labels = models.Label.select()
+            for label in labels:
+                if label.content.lower() == form.label.data.lower().strip():
+                    label2 = label
+                    break
+            if not label2:
+                label2 = models.Label.create(
+                    content=form.label.data
+                )
+            entry.title = form.title.data
+            entry.time_spent = form.time_spent.data
+            entry.material_learned = form.material_learned.data
+            entry.resources_to_remember = form.resources_to_remember.data
+            entry.label = label2
             entry.save()
             return redirect(url_for("index"))
     return render_template("edit.html", form=form, entry=entry)
@@ -128,9 +151,20 @@ def edit(entry_id):
 @app.route("/entries/delete/<entry_id>")
 @login_required
 def delete(entry_id):
-    entry = models.Entry.get(models.Entry.id==entry_id)
+    entry = models.Entry.get(models.Entry.id == entry_id)
     entry.delete_instance()
-    return redirect(url_for("index"))    
+    return redirect(url_for("index"))
+
+
+@app.route("/labels/")
+@app.route("/labels/<int:label_id>")
+def labels(label_id=None):
+    if label_id:
+        label = models.Label.get(models.Label.id == label_id)
+        return render_template("labels.html", label=label)
+    labels = models.Label.select()
+    return render_template("labels.html", labels=labels)
+
 
 if __name__ == "__main__":
     models.initialize()

@@ -1,27 +1,27 @@
 {% extends "_base.html" %}
 
+
 {% block content %}
-    {% if current_user.is_authenticated %}
-        Hello {{ current_user.username }}
-        <p><a href="{{url_for('logout')}}">Logout</a></p>
-    {% else %}
-        <p><a href="{{url_for('register')}}">Register</a></p>
-        <p><a href="{{url_for('login')}}">Login</a></p>
-    {% endif %}
-    <section>
-        <div class="container">
-            <div class="entry-list">
-                {% if entries %}
-                    {% for entry in entries %}
-                        <article>
-                            <h2><a href="{{url_for('details', entry_id=entry.id) }}">{{ entry.title }}</a></h2>
-                            <p>Created at: <i>{{ entry.timestamp.strftime("%Y:%m %H:%m") }}</i></p>
-                        </article>
-                    {% endfor %}
-                {% else %}
-                    <h2>No entries found</h2>
-                {% endif %}
-            </div>
-        </div>
-    </section>
+    <div class="container">
+        {% if current_user.is_authenticated %}
+            <h1>Welcome, {{current_user.username}}</h1>
+            <p><a href="{{url_for('logout')}}">Logout</a></p>
+
+            {% if current_user.entries %}
+            <h1>My Entries: </h1>
+                {% for entry in current_user.entries %}
+                    <article>
+                        <h4><a href="{{url_for('details', entry_id=entry.id) }}">{{ entry.title }}</a></h4>
+                        <p>Created at: <i>{{ entry.timestamp.strftime("%Y:%m %H:%m") }}</i></p>
+                    </article>2
+                {% endfor %}
+            {% endif %}
+        {% else %}
+            You don't seem to be logged in.
+            <p>
+                <a href="{{url_for('login')}}">Login</a>|
+                <a href="{{url_for('register')}}">Register</a>
+            </p>
+        {% endif %}
+    </div>
 {% endblock %}

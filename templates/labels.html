@@ -1,0 +1,24 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+   {% if label %}
+      <h2>{{label.content}}</h2>
+      {% if label.entries %}
+         <ul>
+            {% for entry in label.entries %}
+               <li>
+                  <a href="{{url_for('details', entry_id=entry.id)}}">{{entry.title}}</a> by {{entry.user.username}}
+               </li>
+            {% endfor %}
+         </ul>
+      {% else %}
+         <p>No entries were found for this label</p>
+      {% endif %}
+   {% elif labels %}
+      {% for label in labels %}
+         <a href="{{url_for('labels', label_id=label.id)}}">{{label.content}}</a>
+      {% endfor %}
+   {% endif %}
+
+{% endblock %}
