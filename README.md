@@ -2,7 +2,7 @@
 
 The following are included:
 
-* User Registeration
+* User Registration
 * User Login
 * CRUD entries
 
